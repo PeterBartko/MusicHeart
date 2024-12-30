@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url';
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import svgLoader from "vite-svg-loader";
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,6 +13,32 @@ export default defineConfig({
       },
     }),
     svgLoader(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Music Heart',
+        short_name: 'Music Heart',
+        description: 'Tracking and reviewing music albums',
+        theme_color: '#fffbeb',
+        icons: [
+          {
+            src: 'pwa-96x96.png',
+            sizes: '96x96',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    })
   ],
   server: {
     port: 6543,
