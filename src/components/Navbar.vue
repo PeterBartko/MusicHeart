@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconMusicHeart, IconSearch } from '@tabler/icons-vue'
+import { IconMusicHeart, IconSearch, IconBackspace } from '@tabler/icons-vue'
 import { computed, ref } from "vue";
 import { useStore } from "@/store";
 
@@ -12,14 +12,13 @@ const activeFilter = ref(-1)
 const activeGold = ref(false)
 
 const setActiveFilter = (filter: string | number) => {
-  console.log(filter)
   if (filter === 'gold') {
-    activeGold.value ? activeGold.value = false : activeGold.value = true
+    activeGold.value = !activeGold.value
     emit('activeGold', activeGold.value)
     return
   }
 
-  activeFilter.value === filter ? activeFilter.value = -1 : activeFilter.value = filter
+  activeFilter.value = activeFilter.value === filter ? -1 : filter as number
   emit('activeYear', activeFilter.value)
 }
 
@@ -36,7 +35,10 @@ const tenOutOfTenRatio = computed(() => Math.round(store.listened.reduce((acc, a
 
       <div class="flex items-center text-amber-950 w-full md:w-fit">
         <IconSearch size="20" :class="[search.length ? 'text-rose-500' : 'text-amber-950/50', 'mr-1']" />
-        <input v-model="search" type="search" placeholder="Search..." class="focus:outline-none bg-amber-50 placeholder-amber-950/50 w-full">
+        <input v-model="search" placeholder="Search..." class="focus:outline-none bg-amber-50 placeholder-amber-950/50 w-full">
+        <button v-if="search.length" @click="search = ''" class="focus:outline-none">
+          <IconBackspace class="text-rose-500 hover:opacity-60" />
+        </button>
       </div>
     </div>
 

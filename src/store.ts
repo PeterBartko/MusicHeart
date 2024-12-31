@@ -12,8 +12,8 @@ export enum ListType {
 
 export const useStore = defineStore('store', {
   state: () => ({
-    queue: [],
-    listened: []
+    queue: [] as Album[],
+    listened: [] as Album[]
   }),
   
   actions: {
@@ -28,7 +28,7 @@ export const useStore = defineStore('store', {
     },
     
     async post(payload: Album) {
-      this.queue.unshift(payload)
+      this.queue.push(payload)
       await this.save()
     },
     
@@ -51,11 +51,11 @@ export const useStore = defineStore('store', {
     async delete(type: ListType, id: number) {
       const index = this[type].findIndex(item => item.id === id)
       const [deleted] = this[type].splice(index, 1)
+      await this.save()
       
       if (deleted.cover) {
         await deleteObject(ref(storage, getCoverPath(deleted)))
       }
-      await this.save()
     },
     
     async updateScore(albumId: number, score: string) {

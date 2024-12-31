@@ -2,22 +2,20 @@
 import { IconPhotoX, IconPhotoDown } from '@tabler/icons-vue'
 import { reactive, ref } from 'vue'
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
-import { useStore } from "@/store";
-import Loader from "@/components/Loader.vue";
-import { Album } from "@/types";
+import { ListType, useStore } from "@/store";
+import type { Album } from "@/types";
 
 const store = useStore()
 
 const emit = defineEmits(['close'])
 const props = defineProps<{
   album?: Album,
-  type?: string
+  type?: ListType
 }>()
 
-let file: File
-const loading = ref(false)
-const coverPreview = ref()
-const form = reactive({
+let file: File | undefined
+const coverPreview = ref(props.album?.cover)
+const form = reactive<Album>({
   id: props.album?.id ?? Date.now(),
   cover: props.album?.cover ?? '',
   title: props.album?.title ?? '',
@@ -26,9 +24,9 @@ const form = reactive({
   score: props.album?.score ?? 0,
 })
 
-const onFileChange = async (event: InputEvent) => {
-  file = event.target.files[0]
-  coverPreview.value = URL.createObjectURL(file)
+const onFileChange = async (event: Event) => {
+  file = (event.target as HTMLInputElement).files![0]
+  coverPreview.value = URL.createObjectURL(file as Blob)
 }
 
 const removeCover = () => {
@@ -38,20 +36,15 @@ const removeCover = () => {
 }
 
 const submit = async () => {
-  loading.value = true
-
+  emit('close')
   if (file) {
     form.cover = await store.uploadCover(file)
   }
-
   if (props.album) {
-    await store.put(props.type, form)
+    await store.put(props.type!, form)
   } else {
     await store.post(form)
   }
-
-  loading.value = false
-  emit('close')
 }
 </script>
 
@@ -77,26 +70,20 @@ const submit = async () => {
                   <IconPhotoDown size="35" stroke-width="1.5" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-20 text-[#eddbc5]" />
                 </div>
                 <div class="space-y-2 h-full">
-                  <input v-model="form.title" type="text" placeholder="Title" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50">
-                  <input v-model="form.artist" type="text" placeholder="Artist" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 mb-auto">
+                  <input v-model="form.title" type="text" placeholder="Title" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 focus:outline-none">
+                  <input v-model="form.artist" type="text" placeholder="Artist" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 mb-auto focus:outline-none">
                   <div class="flex items-centers h-7">
                     <button v-if="coverPreview" class="flex items-center gap-1 h-full text-amber-50 bg-red-400 text-sm p-0.5 pr-1 rounded hover:opacity-70" @click="removeCover">
                       <IconPhotoX size="20" />
                       <span>Remove Cover</span>
                     </button>
-                    <input v-model="form.year" type="number" max="9999" placeholder="Year" class="border-amber-700/20 border-2 ml-auto w-[57px] rounded px-2 bg-amber-50 placeholder-amber-950/50">
+                    <input v-model="form.year" type="number" max="2050" placeholder="Year" class="border-amber-700/20 border-2 ml-auto w-[60px] focus:outline-none rounded pl-2.5 pr-2 bg-amber-50 placeholder-amber-950/50">
                   </div>
                 </div>
               </div>
 
-              <div v-if="loading" class="bg-amber-50/80 fixed inset-0">
-                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <Loader />
-                </div>
-              </div>
-
               <div class="mt-4">
-                <button type="button" class="ml-auto block justify-center rounded-md border border-transparent bg-green-200 px-3 py-1 text-sm font-medium text-green-900 hover:bg-green-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" @click="submit">
+                <button type="button" class="ml-auto block justify-center rounded-md border border-transparent bg-green-200 px-3 py-1 text-sm font-medium text-green-900 hover:bg-green-300 focus:outline-none" @click="submit">
                   Save
                 </button>
               </div>
@@ -104,7 +91,6 @@ const submit = async () => {
           </TransitionChild>
         </div>
       </div>
-
     </Dialog>
   </TransitionRoot>
 </template>

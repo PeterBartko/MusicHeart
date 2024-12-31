@@ -8,14 +8,15 @@ import { Container, Draggable } from 'vue-dndrop'
 import { useStore } from "@/store";
 import { applyDrag } from "@/utils";
 import Loader from '@/components/Loader.vue'
-import type {Album} from "@/types.ts";
+import type { Album } from "@/types.ts";
 
 const store = useStore()
 
+const isMobile = window.innerWidth <= 768
 const loading = ref(false)
 const albumDialogVisible = ref(false)
 const search = ref('')
-const activeFilter = ref(-1)
+const activeFilter = ref<string | number>(-1)
 const activeGold = ref(false)
 
 onMounted(async () => {
@@ -24,12 +25,12 @@ onMounted(async () => {
   loading.value = false
 })
 
-const onQueueDrop = (dropResult) => {
+const onQueueDrop = (dropResult: any) => {
   store.queue = applyDrag(store.queue, dropResult);
   store.save()
 }
 
-const onListenedDrop = (dropResult) => {
+const onListenedDrop = (dropResult: any) => {
   store.listened = applyDrag(store.listened, dropResult);
   store.save()
 }
@@ -92,7 +93,7 @@ const listened = computed(() => store.listened.filter((album: Album) => {
       </header>
       <Container @drop="onQueueDrop" tag="ul">
         <div v-if="!queue.length" class="text-amber-950/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Queue</div>
-        <Draggable tag="li" v-for="album in queue" :key="album?.id">
+        <Draggable tag="li" v-for="album in queue" :key="album?.id" :drag-not-allowed="isMobile">
           <AlbumItem :album in-queue @active-artist="artist => search = artist" />
         </Draggable>
       </Container>
@@ -110,7 +111,7 @@ const listened = computed(() => store.listened.filter((album: Album) => {
 
       <Container @drop="onListenedDrop" tag="ul" class="space-y-s2">
         <div v-if="!listened.length" class="text-amber-950/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Listened</div>
-        <Draggable tag="li" v-for="album in listened" :key="album?.id">
+        <Draggable tag="li" v-for="album in listened" :key="album?.id" :drag-not-allowed="isMobile">
           <AlbumItem :album @active-artist="artist => search = artist" />
         </Draggable>
       </Container>

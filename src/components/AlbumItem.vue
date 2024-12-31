@@ -26,7 +26,7 @@ const openModal = (listType: ListType) => {
 </script>
 
 <template>
-  <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
+  <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
     <div class="text-amber-950 flex">
       <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
       <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">
@@ -46,7 +46,7 @@ const openModal = (listType: ListType) => {
         </button>
 
         <div class="flex gap-2 md:flex-col">
-          <button class="bg-blue-400 text-amber-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.QUEUE)">
+          <button class="size-[32px] bg-blue-400 text-amber-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.QUEUE)">
             <IconEdit />
           </button>
           <DeletePopover :type="ListType.QUEUE" :id="album.id" />
@@ -55,7 +55,7 @@ const openModal = (listType: ListType) => {
     </div>
   </div>
 
-  <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
+  <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
     <div :class="[album.score === '10' ? 'ten-out-of-ten' : 'text-amber-950', 'flex']">
       <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
       <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">

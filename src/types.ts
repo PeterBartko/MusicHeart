@@ -3,6 +3,6 @@ export interface Album {
   artist: string
   title: string
   cover?: string
-  year: number
-  score: string
+  year: string | number
+  score: string | number
 }
