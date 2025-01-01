@@ -28,7 +28,9 @@ const openModal = (listType: ListType) => {
 <template>
   <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
     <div class="text-amber-950 flex">
-      <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
+      <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener">
+        <img :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
+      </a>
       <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">
         <IconMusic size="50" class="text-gray-300" />
       </div>
@@ -57,7 +59,9 @@ const openModal = (listType: ListType) => {
 
   <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
     <div :class="[album.score === '10' ? 'ten-out-of-ten' : 'text-amber-950', 'flex']">
-      <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
+      <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener">
+        <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
+      </a>
       <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">
         <IconMusic size="50" class="text-gray-300" />
       </div>

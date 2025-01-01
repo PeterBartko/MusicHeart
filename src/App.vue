@@ -8,7 +8,8 @@ import { Container, Draggable } from 'vue-dndrop'
 import { useStore } from "@/store";
 import { applyDrag } from "@/utils";
 import Loader from '@/components/Loader.vue'
-import type { Album } from "@/types.ts";
+import type { Album } from '@/types';
+import { getAccessToken } from '@/spotify';
 
 const store = useStore()
 
@@ -23,6 +24,8 @@ onMounted(async () => {
   loading.value = true
   await store.get()
   loading.value = false
+
+  localStorage.setItem('token', await getAccessToken())
 })
 
 const onQueueDrop = (dropResult: any) => {

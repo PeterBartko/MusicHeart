@@ -5,4 +5,5 @@ export interface Album {
   cover?: string
   year: string | number
   score: string | number
+  spotifyUrl: string
 }

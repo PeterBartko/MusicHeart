@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { IconPhotoX, IconPhotoDown } from '@tabler/icons-vue'
+import { IconPhotoDown, IconPhotoEdit } from '@tabler/icons-vue'
 import { reactive, ref } from 'vue'
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { ListType, useStore } from "@/store";
 import type { Album } from "@/types";
+import SpotifyAlbumsAutocomplete from "@/components/SpotifyAlbumsAutocomplete.vue";
 
 const store = useStore()
 
@@ -22,6 +23,7 @@ const form = reactive<Album>({
   artist: props.album?.artist ?? '',
   year: props.album?.year ?? '',
   score: props.album?.score ?? 0,
+  spotifyUrl: props.album?.spotifyUrl ?? '',
 })
 
 const onFileChange = async (event: Event) => {
@@ -46,6 +48,15 @@ const submit = async () => {
     await store.post(form)
   }
 }
+
+const fillForm = (album: Album) => {
+  form.cover = album.cover
+  form.title = album.title
+  form.artist = album.artist
+  form.year = album.year
+  form.spotifyUrl = album.spotifyUrl
+  coverPreview.value = album.cover
+}
 </script>
 
 <template>
@@ -59,10 +70,12 @@ const submit = async () => {
         <div class="flex min-h-full items-center justify-center p-4 text-center">
           <TransitionChild
             as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95">
-            <DialogPanel class="w-full max-w-md transform overflow-hidden rounded-2xl bg-amber-50 p-6 text-left align-middle shadow-xl transition-all">
+            <DialogPanel class="w-full max-w-md transform rounded-2xl bg-amber-50 p-6 text-left align-middle shadow-xl transition-all">
               <DialogTitle as="h3" class="text-lg font-bold leading-6 text-amber-950">
                 {{ album ? 'Edit Album' : 'New Album' }}
               </DialogTitle>
+              <SpotifyAlbumsAutocomplete @get-album-data="fillForm" />
+
               <div class="mt-2 flex gap-2">
                 <div class="relative">
                   <input id="cover" type="file" accept="image/*" class="hide-file-input text-transparent block size-24 rounded-md border-2 border-dashed border-amber-700/20" @change="onFileChange">
@@ -73,9 +86,9 @@ const submit = async () => {
                   <input v-model="form.title" type="text" placeholder="Title" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 focus:outline-none">
                   <input v-model="form.artist" type="text" placeholder="Artist" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 mb-auto focus:outline-none">
                   <div class="flex items-centers h-7">
-                    <button v-if="coverPreview" class="flex items-center gap-1 h-full text-amber-50 bg-red-400 text-sm p-0.5 pr-1 rounded hover:opacity-70" @click="removeCover">
-                      <IconPhotoX size="20" />
-                      <span>Remove Cover</span>
+                    <button v-if="coverPreview" class="flex items-center gap-1 h-full text-amber-50 bg-blue-400 text-sm p-0.5 pr-1 rounded hover:opacity-70" @click="removeCover">
+                      <IconPhotoEdit size="20" />
+                      <span>Change Cover</span>
                     </button>
                     <input v-model="form.year" type="number" max="2050" placeholder="Year" class="border-amber-700/20 border-2 ml-auto w-[60px] focus:outline-none rounded pl-2.5 pr-2 bg-amber-50 placeholder-amber-950/50">
                   </div>
