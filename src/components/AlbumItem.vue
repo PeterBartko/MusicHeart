@@ -29,7 +29,7 @@ const openModal = (listType: ListType) => {
   <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
     <div class="text-amber-950 flex">
       <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener">
-        <img :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
+        <img :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover from spotify">
       </a>
       <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">
         <IconMusic size="50" class="text-gray-300" />
