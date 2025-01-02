@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import AlbumDialog from '@/components/AlbumDialog.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
@@ -20,13 +20,11 @@ const search = ref('')
 const activeFilter = ref<string | number>(-1)
 const activeGold = ref(false)
 
-onMounted(async () => {
-  loading.value = true
-  await store.get()
-  loading.value = false
-
-  localStorage.setItem('token', await getAccessToken())
-})
+const shortcuts = (event: KeyboardEvent) => {
+  if (event?.key === 'a') {
+    albumDialogVisible.value = true
+  }
+}
 
 const onQueueDrop = (dropResult: any) => {
   store.queue = applyDrag(store.queue, dropResult);
@@ -37,6 +35,16 @@ const onListenedDrop = (dropResult: any) => {
   store.listened = applyDrag(store.listened, dropResult);
   store.save()
 }
+
+onMounted(async () => {
+  loading.value = true
+  await store.get()
+  loading.value = false
+
+  localStorage.setItem('token', await getAccessToken())
+  window.addEventListener('keyup', shortcuts)
+})
+onUnmounted(() => window.removeEventListener('keyup', shortcuts))
 
 const queue = computed(() => store.queue.filter((album: Album) => {
   const { title, artist, year } = album
