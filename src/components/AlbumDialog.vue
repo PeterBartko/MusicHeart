@@ -67,7 +67,7 @@ const fillForm = (album: Album) => {
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center">
+        <div class="flex min-h-full items-center justify-center p-4 text-center -translate-y-[4rem] md:translate-y-0">
           <TransitionChild
             as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95">
             <DialogPanel class="w-full max-w-md transform rounded-2xl bg-amber-50 p-6 text-left align-middle shadow-xl transition-all">

@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption, TransitionRoot } from '@headlessui/vue'
 import { fetchAlbums } from '@/spotify';
+import { IconBrandSpotify } from '@tabler/icons-vue'
 
 const emit = defineEmits(['getAlbumData'])
 
@@ -26,7 +27,10 @@ watch(selected, (value) => {
 <template>
     <Combobox v-model="selected">
       <div class="relative mt-1 w-full">
-        <ComboboxInput placeholder="Search album on spotify" @input="fetchSpotifyAlbums($event.target.value)" class="w-full border-amber-700/20 border-2 rounded px-2 bg-amber-50 placeholder-amber-950/50 focus:outline-none" />
+        <div class="w-full flex border-amber-700/20 border-2 rounded sp-1">
+          <IconBrandSpotify class="text-amber-950/50 mr-1" />
+          <ComboboxInput placeholder="Search album on spotify" @input="fetchSpotifyAlbums($event.target.value)" class="bg-amber-50 focus:outline-none placeholder-amber-950/50" />
+        </div>
 
         <TransitionRoot leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
           <ComboboxOptions class="absolute hide-scroll-bar mt-1 z-50 max-h-60 w-full overflow-auto rounded-md bg-amber-50 py-1 text-base shadow focus:outline-none sm:text-sm">
