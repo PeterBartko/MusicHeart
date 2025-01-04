@@ -43,9 +43,9 @@ const tenOutOfTenRatio = computed(() => Math.round(store.listened.reduce((acc, a
     </div>
 
     <div class="flex items-center justify-between md:justify-end mt-2 md:mt-0 gap-1.5">
-      <button :class="[activeGold ? 'ring-amber-400 ring-2' : '', 'bg-amber-400 flex items-center gap-0.5 text-nowrap text-amber-50 px-2 py-1 rounded-md border-amber-50 border-2 hover:opacity-70 transition-all']" @click="setActiveFilter('gold')">
-        <span>{{ tenOutOfTenRatio }} %</span>
-      </button>
+<!--      <button :class="[activeGold ? 'ring-amber-400 ring-2' : '', 'bg-amber-400 flex items-center gap-0.5 text-nowrap text-amber-50 px-2 py-1 rounded-md border-amber-50 border-2 hover:opacity-70 transition-all']" @click="setActiveFilter('gold')">-->
+<!--        <span>{{ tenOutOfTenRatio }} %</span>-->
+<!--      </button>-->
       <button v-for="years in ['1', '0', '9', '8', '7', '6']" :key="years" :class="[activeFilter === years ? 'bg-amber-950 border-amber-50 !text-amber-50' : '', 'flex items-center justify-center gap-0.5 font-medium w-full md:w-fit text-amber-950 px-2 py-0.5 rounded-md border-amber-950 border-2 hover:opacity-70 transition-all']" @click="setActiveFilter(years)">
         <span>{{ years }}0</span>
       </button>
