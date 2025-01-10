@@ -58,7 +58,7 @@ const openModal = (listType: ListType) => {
   </div>
 
   <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
-    <div :class="[/*album.score === '10'*/ false ? 'ten-out-of-ten' : 'text-amber-950', 'flex']">
+    <div :class="[album.score === '10' ? 'ten-out-of-ten' : 'text-amber-950', 'flex']">
       <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener">
         <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
       </a>
@@ -69,7 +69,7 @@ const openModal = (listType: ListType) => {
         <h3 class="text-lg max-w-[260px] truncate md:max-w-full md:text-2xl font-bold">{{ album.title }}</h3>
         <p :class="[album.score === '10' ? 'decoration-amber-300' : '', 'font-medium md:text-lg -mt-2 hover:underline cursor-pointer']" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
         <div class="s-mt-2 mt-5">{{ album.year }}</div>
-<!--        <button class="-mt-1 text-[1.3rem] font-bold w-fit" @click="scoreDialogVisible = true">{{ album.score }}</button>-->
+        <button class="-mt-1 text-[1.3rem] font-bold w-fit" @click="scoreDialogVisible = true">{{ album.score }}</button>
       </div>
     </div>
 
