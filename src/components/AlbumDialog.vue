@@ -66,34 +66,34 @@ const fillForm = (album: Album) => {
   <TransitionRoot appear show as="template">
     <Dialog as="div" @close="emit('close')" class="relative z-10">
       <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100" leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-amber-950/25" />
+        <div class="fixed inset-0 bg-zinc-950/25" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
         <form class="flex min-h-full items-center justify-center p-4 text-center -translate-y-[4rem] md:translate-y-0" @submit.prevent="submit">
           <TransitionChild
             as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95">
-            <DialogPanel class="w-full max-w-md transform rounded-2xl bg-amber-50 p-6 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="text-lg font-bold leading-6 text-amber-950">
+            <DialogPanel class="w-full max-w-md transform rounded-2xl bg-zinc-50 p-6 text-left align-middle shadow-xl transition-all">
+              <DialogTitle as="h3" class="text-lg font-bold leading-6 text-black">
                 {{ album ? 'Edit Album' : 'New Album' }}
               </DialogTitle>
               <SpotifyAlbumsAutocomplete @get-album-data="fillForm" />
 
               <div class="mt-2 flex gap-2">
                 <div class="relative">
-                  <input id="cover" type="file" accept="image/*" class="hide-file-input text-transparent block size-24 rounded-md border-2 border-dashed border-amber-700/20" @change="onFileChange">
+                  <input id="cover" type="file" accept="image/*" class="hide-file-input text-transparent block size-24 rounded-md border-2 border-dashed border-zinc-700/20" @change="onFileChange">
                   <img v-if="coverPreview" :src="coverPreview" alt="cover preview" class="absolute inset-0 -z-10 rounded-md">
-                  <IconPhotoDown size="35" stroke-width="1.5" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-20 text-[#eddbc5]" />
+                  <IconPhotoDown size="35" stroke-width="1.5" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-20 text-zinc-300" />
                 </div>
                 <div class="space-y-2 h-full">
-                  <input ref="titleInput" v-model="form.title" type="text" placeholder="Title" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 focus:outline-none">
-                  <input v-model="form.artist" type="text" placeholder="Artist" class="border-amber-700/20 border-2 w-full rounded px-2 bg-amber-50 placeholder-amber-950/50 mb-auto focus:outline-none">
+                  <input ref="titleInput" v-model="form.title" type="text" placeholder="Title" class="border-zinc-700/20 border-2 w-full rounded px-2 bg-zinc-50 placeholder-zinc-950/50 focus:outline-none">
+                  <input v-model="form.artist" type="text" placeholder="Artist" class="border-zinc-700/20 border-2 w-full rounded px-2 bg-zinc-50 placeholder-zinc-950/50 mb-auto focus:outline-none">
                   <div class="flex items-centers h-7">
-                    <button v-if="coverPreview" class="flex items-center gap-1 h-full text-amber-50 bg-blue-400 text-sm p-0.5 pr-1 rounded hover:opacity-70" type="button" @click.prevent="removeCover">
+                    <button v-if="coverPreview" class="flex items-center gap-1 h-full text-zinc-50 bg-blue-400 text-sm p-0.5 pr-1 rounded hover:opacity-70" type="button" @click.prevent="removeCover">
                       <IconPhotoEdit size="20" />
                       <span>Change Cover</span>
                     </button>
-                    <input v-model="form.year" type="number" max="2050" placeholder="Year" class="border-amber-700/20 border-2 ml-auto w-[60px] focus:outline-none rounded pl-2.5 pr-2 bg-amber-50 placeholder-amber-950/50">
+                    <input v-model="form.year" type="number" max="2050" placeholder="Year" class="border-zinc-700/20 border-2 ml-auto w-[60px] focus:outline-none rounded pl-2.5 pr-2 bg-zinc-50 placeholder-zinc-950/50">
                   </div>
                 </div>
               </div>

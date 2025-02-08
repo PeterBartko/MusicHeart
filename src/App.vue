@@ -82,35 +82,37 @@ const listened = computed(() => store.listened.filter((album: Album) => {
 <template>
   <Navbar v-model="search" @active-year="filter => activeFilter = filter" @active-gold="filter => activeGold = filter" />
 
-  <div v-if="loading" class="bg-amber-50/80 fixed inset-0">
+  <div v-if="loading" class="fixed inset-0">
     <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
       <Loader />
     </div>
   </div>
 
   <section v-else class="p-2 md:p-6">
-    <header class="flex items-center gap-2 mb-3 text-amber-950">
-      <h2 class="text-2xl font-semibold">Queue</h2>
-      &bullet;
-      <div class="flex items-center gap-0.5 mt-0.5">
-        <IconDisc size="20" />
-        <span>{{ queue.length }}</span>
-      </div>
-      <button class="flex items-center gap-0.5 pr-1 border-2 border-amber-950 rounded hover:text-green-400 hover:border-green-400 transition-colors" @click="albumDialogVisible = true">
-        <IconPlus size="20" stroke-width="2.5" />
-        New Album
-      </button>
-    </header>
-    <Container @drop="onQueueDrop" tag="ul">
-      <div v-if="!queue.length" class="text-amber-950/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Queue</div>
-      <Draggable tag="li" v-for="album in queue" :key="album?.id" :drag-not-allowed="isMobile">
-        <AlbumItem :album in-queue @active-artist="artist => search = artist" />
-      </Draggable>
-    </Container>
+    <div v-if="!activeGold">
+      <header class="flex items-center gap-2 mb-3 text-black">
+        <h2 class="text-2xl font-semibold">Queue</h2>
+        &bullet;
+        <div class="flex items-center gap-0.5 mt-0.5">
+          <IconDisc size="20" />
+          <span>{{ queue.length }}</span>
+        </div>
+        <button class="flex items-center gap-0.5 pr-1 border-2 border-zinc-950 rounded hover:text-green-400 hover:border-green-400 transition-colors" @click="albumDialogVisible = true">
+          <IconPlus size="20" stroke-width="2.5" />
+          New Album
+        </button>
+      </header>
+      <Container @drop="onQueueDrop" tag="ul">
+        <div v-if="!queue.length" class="text-black/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Queue</div>
+        <Draggable tag="li" v-for="album in queue" :key="album?.id" :drag-not-allowed="isMobile">
+          <AlbumItem :album in-queue @active-artist="artist => search = artist" />
+        </Draggable>
+      </Container>
 
-    <hr class="my-12 border-amber-700/20">
+      <hr class="my-12 border-zinc-700/20">
+    </div>
 
-    <header class="flex items-center gap-2 mb-3 text-amber-950">
+    <header class="flex items-center gap-2 mb-3 text-black">
       <h2 class="text-2xl font-semibold">Listened</h2>
       &bullet;
       <div class="flex items-center gap-0.5 mt-0.5">
@@ -120,7 +122,7 @@ const listened = computed(() => store.listened.filter((album: Album) => {
     </header>
 
     <Container @drop="onListenedDrop" tag="ul" class="space-y-s2">
-      <div v-if="!listened.length" class="text-amber-950/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Listened</div>
+      <div v-if="!listened.length" class="text-black/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Listened</div>
       <Draggable tag="li" v-for="album in listened.filter(a => a.artist !== 'Lil Peep')" :key="album?.id" :drag-not-allowed="isMobile">
         <AlbumItem :album @active-artist="artist => search = artist" />
       </Draggable>

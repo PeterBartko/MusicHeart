@@ -36,7 +36,7 @@ input::-webkit-inner-spin-button {
 input[type="range"] {
   display: block;
   -webkit-appearance: none;
-  background-color: theme('colors.amber.900');
+  background-color: theme('colors.zinc.900');
   width: 300px;
   height: 5px;
   border-radius: 5px;
@@ -45,17 +45,17 @@ input[type="range"] {
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  background-color: theme('colors.amber.400');
+  background-color: theme('colors.zinc.400');
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid theme('colors.amber.50');
+  border: 2px solid theme('colors.zinc.50');
   cursor: pointer;
   transition: .1s ease-in-out;
 }
 input[type="range"]::-webkit-slider-thumb:hover {
-  background-color: theme('colors.amber.50');
-  border: 2px solid theme('colors.amber.400');
+  background-color: theme('colors.zinc.50');
+  border: 2px solid theme('colors.zinc.400');
 }
 input[type="range"]::-webkit-slider-thumb:active {
   transform: scale(1.2);

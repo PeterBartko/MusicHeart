@@ -18,7 +18,7 @@ const deleteAlbum = (close: Function) => {
 
 <template>
   <Popover v-slot="{ close }" class="relative">
-    <PopoverButton class="bg-rose-400 text-amber-50 p-1 rounded-full hover:opacity-60">
+    <PopoverButton class="bg-rose-400 text-zinc-50 p-1 rounded-full hover:opacity-60">
       <IconTrash />
     </PopoverButton>
 
@@ -31,11 +31,11 @@ const deleteAlbum = (close: Function) => {
         leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel class="absolute top-9 right-0 s-translate-x-1/2 px-4 sm:px-0 lg:max-w-3xl">
-        <div class="rounded-lg bg-amber-50 shadow-lg ring-1 ring-black/5 py-2 px-3">
-          <p class="mb-2 text-amber-950">Are you sure?</p>
+        <div class="rounded-lg bg-zinc-50 shadow-lg ring-1 ring-black/5 py-2 px-3">
+          <p class="mb-2 text-black">Are you sure?</p>
           <div class="flex items-center gap-2">
-            <button class="border-2 border-amber-950 text-amber-950 w-20 rounded hover:opacity-60" @click="close()">Cancel</button>
-            <button class="bg-rose-400 text-amber-50 py-0.5 w-20 rounded hover:opacity-60" @click="deleteAlbum(close)">Yes</button>
+            <button class="border-2 border-zinc-950 text-black w-20 rounded hover:opacity-60" @click="close()">Cancel</button>
+            <button class="bg-rose-400 text-zinc-50 py-0.5 w-20 rounded hover:opacity-60" @click="deleteAlbum(close)">Yes</button>
           </div>
         </div>
       </PopoverPanel>

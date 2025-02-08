@@ -27,13 +27,13 @@ watch(selected, (value) => {
 <template>
     <Combobox v-model="selected">
       <div class="relative mt-1 w-full">
-        <div class="w-full flex border-amber-700/20 border-2 rounded sp-1">
-          <IconBrandSpotify class="text-amber-950/50 mr-1" />
-          <ComboboxInput placeholder="Search album on spotify" @input="fetchSpotifyAlbums($event.target.value)" class="bg-amber-50 focus:outline-none placeholder-amber-950/50" />
+        <div class="w-full flex border-zinc-700/20 border-2 rounded sp-1">
+          <IconBrandSpotify class="text-green-500 mr-1" />
+          <ComboboxInput placeholder="Search album on spotify" @input="fetchSpotifyAlbums($event.target.value)" class="bg-zinc-50 focus:outline-none placeholder-zinc-950/50" />
         </div>
 
         <TransitionRoot leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <ComboboxOptions class="absolute hide-scroll-bar mt-1 z-50 max-h-60 w-full overflow-auto rounded-md bg-amber-50 py-1 text-base shadow focus:outline-none sm:text-sm">
+          <ComboboxOptions class="absolute hide-scroll-bar mt-1 z-50 max-h-60 w-full overflow-auto rounded-md bg-zinc-50 py-1 text-base shadow focus:outline-none sm:text-sm">
             <ComboboxOption
               v-for="album in albums"
               as="template"
@@ -41,7 +41,7 @@ watch(selected, (value) => {
               :value="album"
               v-slot="{ selected, active }"
             >
-              <li class="relative cursor-default select-none p-1" :class="{ 'bg-amber-400 text-amber-50': active, 'text-amber-950': !active }">
+              <li class="relative cursor-default select-none p-1" :class="{ 'bg-zinc-400 text-zinc-50': active, 'text-black': !active }">
                 <div class="flex items-center gap-2 truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
                   <img v-if="album.images.length" :src="album.images[2].url" class="size-10 rounded" alt="album cover">
                   <span class="font-medium">

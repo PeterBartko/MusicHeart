@@ -8,7 +8,7 @@ import { ref } from "vue";
 import type { Album } from "@/types.ts";
 
 const emit = defineEmits(['activeArtist'])
-defineProps<{
+const props = defineProps<{
   album: Album,
   inQueue?: boolean,
 }>()
@@ -26,8 +26,8 @@ const openModal = (listType: ListType) => {
 </script>
 
 <template>
-  <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
-    <div class="text-amber-950 flex">
+  <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-zinc-100 transition-colors cursor-grab active:cursor-grabbing">
+    <div class="text-black flex">
       <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener" class="size-20 md:size-28 mr-3 rounded-sm">
         <img :src="album.cover" alt="album cover from spotify">
       </a>
@@ -35,7 +35,7 @@ const openModal = (listType: ListType) => {
         <IconMusic size="50" class="text-gray-300" />
       </div>
       <div class="flex flex-col justify-between">
-        <h3 class="text-lg max-w-[235px] truncate md:max-w-full md:text-2xl font-bold">{{ album.title }}</h3>
+        <h3 class="text-lg leading-4 max-w-[235px] truncate md:max-w-full md:text-2xl font-bold">{{ album.title }}</h3>
         <p class="font-medium md:text-lg -mt-4 md:-mt-8 hover:underline cursor-pointer" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
         <div class="">{{ album.year }}</div>
       </div>
@@ -43,12 +43,12 @@ const openModal = (listType: ListType) => {
 
     <div class="flex flex-col md:h-28">
       <div class="flex flex-col gap-2 items-center mt-auto">
-        <button class="ml-auto bg-green-400 text-amber-50 p-1 rounded-full hover:opacity-60" @click="store.moveToListened(album)">
+        <button class="ml-auto bg-green-400 text-zinc-50 p-1 rounded-full hover:opacity-60" @click="store.moveToListened(album)">
           <IconHeadphonesFilled />
         </button>
 
         <div class="flex gap-2 md:flex-col">
-          <button class="size-[32px] bg-blue-400 text-amber-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.QUEUE)">
+          <button class="size-[32px] bg-blue-400 text-zinc-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.QUEUE)">
             <IconEdit />
           </button>
           <DeletePopover :type="ListType.QUEUE" :id="album.id" />
@@ -57,8 +57,8 @@ const openModal = (listType: ListType) => {
     </div>
   </div>
 
-  <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-amber-100/50 cursor-grab active:cursor-grabbing">
-    <div :class="[album.score === '10' ? 'ten-out-of-ten' : 'text-amber-950', 'flex']">
+  <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-zinc-100/50 cursor-grab active:cursor-grabbing">
+    <div :class="[album.score === '10' ? 'ten-out-of-ten' : 'text-black', 'flex']">
       <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener">
         <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
       </a>
@@ -66,16 +66,18 @@ const openModal = (listType: ListType) => {
         <IconMusic size="50" class="text-gray-300" />
       </div>
       <div class="flex flex-col justify-between">
-        <h3 class="text-lg max-w-[260px] truncate md:max-w-full md:text-2xl font-bold">{{ album.title }}</h3>
-        <p :class="[album.score === '10' ? 'decoration-amber-300' : '', 'font-medium md:text-lg -mt-2 hover:underline cursor-pointer']" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
-        <div class="s-mt-2 mt-5">{{ album.year }}</div>
-        <button class="-mt-1 text-[1.3rem] font-bold w-fit" @click="scoreDialogVisible = true">{{ album.score }}</button>
+        <div class="flex flex-col gap-0.5 md:gap-1.5">
+          <h3 class="text-lg leading-4 max-w-[260px] truncate md:max-w-full md:text-2xl md:leading-5 font-bold grad-text">{{ album.title }}</h3>
+          <p :class="[album.score === '10' ? 'decoration-zinc-300' : '', 'font-medium text-[15px]s leading-4 md:text-lg md:md:leading-5 hover:underline cursor-pointer']" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
+          <div class="text-sm md:text-base md:leading-3 leading-4">{{ album.year }}</div>
+        </div>
+        <button class="text-[1.3rem] md:text-2xl font-bold w-fit leading-5" @click="scoreDialogVisible = true">{{ album.score }}</button>
       </div>
     </div>
 
     <div class="flex flex-col md:h-28">
       <div class="flex flex-col gap-2 items-center mt-auto">
-        <button class="bg-blue-400 text-amber-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.LISTENED)">
+        <button class="bg-blue-400 text-zinc-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.LISTENED)">
           <IconEdit />
         </button>
         <DeletePopover :type="ListType.LISTENED" :id="album.id" />
