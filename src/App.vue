@@ -123,7 +123,7 @@ const listened = computed(() => store.listened.filter((album: Album) => {
 
     <Container @drop="onListenedDrop" tag="ul" class="space-y-s2">
       <div v-if="!listened.length" class="text-black/70 absolute left-1/2 -translate-x-1/2 top-4">No Albums in Listened</div>
-      <Draggable tag="li" v-for="album in listened.filter(a => a.artist !== 'Lil Peep')" :key="album?.id" :drag-not-allowed="isMobile">
+      <Draggable tag="li" v-for="album in listened" :key="album?.id" :drag-not-allowed="isMobile">
         <AlbumItem :album @active-artist="artist => search = artist" />
       </Draggable>
     </Container>

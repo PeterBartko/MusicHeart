@@ -8,7 +8,7 @@ import { ref } from "vue";
 import type { Album } from "@/types.ts";
 
 const emit = defineEmits(['activeArtist'])
-const props = defineProps<{
+defineProps<{
   album: Album,
   inQueue?: boolean,
 }>()
@@ -71,7 +71,7 @@ const openModal = (listType: ListType) => {
           <p :class="[album.score === '10' ? 'decoration-zinc-300' : '', 'font-medium text-[15px]s leading-4 md:text-lg md:md:leading-5 hover:underline cursor-pointer']" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
           <div class="text-sm md:text-base md:leading-3 leading-4">{{ album.year }}</div>
         </div>
-        <button class="text-[1.3rem] md:text-2xl font-bold w-fit leading-5" @click="scoreDialogVisible = true">{{ album.score }}</button>
+        <button class="text-[1.3rem] md:text-2xl font-bold bg-red-500s pr-2 w-fit leading-5" @click="scoreDialogVisible = true">{{ album.score }}</button>
       </div>
     </div>
 

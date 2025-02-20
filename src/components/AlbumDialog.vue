@@ -23,7 +23,7 @@ const form = reactive<Album>({
   title: props.album?.title ?? '',
   artist: props.album?.artist ?? '',
   year: props.album?.year ?? '',
-  score: props.album?.score ?? 0,
+  score: props.album?.score ?? '-',
   spotifyUrl: props.album?.spotifyUrl ?? '',
 })
 
