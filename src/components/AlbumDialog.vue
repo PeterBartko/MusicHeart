@@ -82,7 +82,7 @@ const fillForm = (album: Album) => {
               <div class="mt-2 flex gap-2">
                 <div class="relative">
                   <input id="cover" type="file" accept="image/*" class="hide-file-input text-transparent block size-24 rounded-md border-2 border-dashed border-zinc-700/20" @change="onFileChange">
-                  <img v-if="coverPreview" :src="coverPreview" alt="cover preview" class="absolute inset-0 -z-10 rounded-md">
+                  <img v-if="coverPreview" :src="coverPreview" alt="cover preview" class="absolute inset-0 pointer-events-none rounded-md">
                   <IconPhotoDown size="35" stroke-width="1.5" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-20 text-zinc-300" />
                 </div>
                 <div class="space-y-2 h-full">

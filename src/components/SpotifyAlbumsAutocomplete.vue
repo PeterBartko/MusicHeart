@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption, TransitionRoot } from '@headlessui/vue'
 import { fetchAlbums } from '@/spotify';
 import { IconBrandSpotify } from '@tabler/icons-vue'
+import type { Album } from '@/types.ts';
 
 const emit = defineEmits(['getAlbumData'])
 
@@ -10,22 +11,21 @@ const albums = ref([])
 const selected = ref()
 const fetchSpotifyAlbums = async (query: string) => {
   albums.value = await fetchAlbums(query)
-  console.log(albums.value)
 }
 
-watch(selected, (value) => {
+const handleAlbumSelect = (album: Album) => {
   emit('getAlbumData', {
-    cover: value.images[1].url,
-    title: value.name,
-    artist: value.artists[0].name,
-    year: value.release_date.slice(0, 4),
-    spotifyUrl: value.external_urls.spotify,
+    cover: album.images[1].url,
+    title: album.name,
+    artist: album.artists[0].name,
+    year: album.release_date.slice(0, 4),
+    spotifyUrl: album.external_urls.spotify,
   })
-})
+}
 </script>
 
 <template>
-    <Combobox v-model="selected">
+    <Combobox v-model="selected" @update:model-value="handleAlbumSelect">
       <div class="relative mt-1 w-full">
         <div class="w-full flex border-zinc-700/20 border-2 rounded sp-1">
           <IconBrandSpotify class="text-green-500 mr-1" />
@@ -41,7 +41,7 @@ watch(selected, (value) => {
               :value="album"
               v-slot="{ selected, active }"
             >
-              <li class="relative cursor-default select-none p-1" :class="{ 'bg-zinc-400 text-zinc-50': active, 'text-black': !active }">
+              <li class="relative cursor-default select-none p-1" :class="{ 'bg-green-400 text-zinc-50': active, 'text-black': !active }">
                 <div class="flex items-center gap-2 truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
                   <img v-if="album.images.length" :src="album.images[2].url" class="size-10 rounded" alt="album cover">
                   <span class="font-medium">
