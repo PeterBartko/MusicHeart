@@ -1,90 +1,117 @@
 <script setup lang="ts">
-import { IconEdit, IconHeadphonesFilled, IconMusic } from "@tabler/icons-vue";
+import { IconHeadphonesFilled, IconMusic, IconTrash } from "@tabler/icons-vue";
 import { ListType, useStore } from "@/store.js";
 import ScoreDialog from "@/components/ScoreDialog.vue";
-import AlbumDialog from "@/components/AlbumDialog.vue";
-import DeletePopover from "@/components/DeletePopover.vue";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import type { Album } from "@/types.ts";
+import { useSwipe } from '@vueuse/core'
+import { useTemplateRef } from 'vue'
 
 const emit = defineEmits(['activeArtist'])
-defineProps<{
+const props = defineProps<{
   album: Album,
   inQueue?: boolean,
 }>()
 
 const store = useStore()
+const el = useTemplateRef('albm')
+const elbtn = useTemplateRef('delbtn')
+const { isSwiping, direction, lengthX } = useSwipe(el)
 
-const albumDialogVisible = ref(false)
+const isOpened = ref(false)
 const scoreDialogVisible = ref(false)
-const type = ref<ListType>()
 
-const openModal = (listType: ListType) => {
-  albumDialogVisible.value = true
-  type.value = listType
+const getColor = (score?: string) => {
+  if (!score || score === '-') {
+    return { background: '#ccc' }
+  }
+
+  const s = Number(score)
+  return { background: s > 4 ? s >= 8 ? 'oklch(79.2% 0.209 151.711)' : 'oklch(82.8% 0.189 84.429)' : 'oklch(64.5% 0.246 16.439)' }
 }
+
+const deleteAlbum = () => {
+  store.delete(props.inQueue ? ListType.QUEUE : ListType.LISTENED, props.album.id)
+}
+
+const swipeStyle = computed(() => {
+  if (isSwiping.value && direction.value === 'left') {
+    const x = lengthX.value > 120 ? 100 + (lengthX.value - 100) * 0.2 : lengthX.value
+    return { 
+      transform: `translateX(-${x}px)`,
+      transition: 'none' 
+    }
+  }
+
+  if (isOpened.value && !isSwiping.value) {
+    return { 
+      transform: 'translateX(-90px)', 
+      transition: 'transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)' 
+    }
+  }
+
+  return { 
+    transform: 'translateX(0)', 
+    transition: 'transform 0.3s ease' 
+  }
+})
+
+watch(isSwiping, (swiping) => {
+  if (swiping && (direction.value === 'left' || direction.value === 'right')) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+  
+  if (!swiping) {
+    if (direction.value === 'left' && lengthX.value > 60) {
+      elbtn.value?.classList.add('z-50')
+      isOpened.value = true
+    } else {
+      isOpened.value = false
+      elbtn.value?.classList.remove('z-50')
+    }
+  }
+})
 </script>
 
 <template>
-  <div v-if="inQueue" class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-zinc-100 transition-colors cursor-grab active:cursor-grabbing">
-    <div class="text-black flex">
-      <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener" class="size-20 md:size-28 mr-3 rounded-sm">
-        <img :src="album.cover" alt="album cover from spotify">
+  <div class="relative">
+    <div ref="delbtn" class="btn bg-rose-500 absolute right-0.5 inset-y-0.5 w-[80px] rounded-md -z-10 grid place-content-center" @click="deleteAlbum">
+      <IconTrash class="text-white" size="26" stroke-width="2" />
+    </div>
+    
+    <div ref="albm" :style="swipeStyle" class="grid grid-cols-[80px_1fr_30px] sm:grid-cols-[96px_1fr_30px] gap-2 rounded bg-white sm:hover:bg-zinc-100 cursor-grab active:cursor-grabbing transition-all">
+      <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener" class="size-20 sm:size-24 shadow">
+        <img v-if="album.cover" :src="album.cover" class="size-20 sm:size-24 rounded-sm" alt="album cover">
       </a>
-      <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">
+      <div v-else class="size-20 sm:size-24 grid place-items-center rounded-sm bg-gray-200">
         <IconMusic size="50" class="text-gray-300" />
       </div>
       <div class="flex flex-col justify-between">
-        <h3 class="text-lg leading-4 max-w-[235px] truncate md:max-w-full md:text-2xl font-bold">{{ album.title }}</h3>
-        <p class="font-medium md:text-lg -mt-4 md:-mt-8 hover:underline cursor-pointer" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
-        <div class="">{{ album.year }}</div>
+        <div>
+          <h3 class="text-lg font-bold leading-[18px] line-clamp-2">{{ album.title }}</h3>
+          <h4 class="text-base font-medium">{{ album.artist }}</h4>
+        </div>
+        <h5>{{ album.year }}</h5>
       </div>
-    </div>
-
-    <div class="flex flex-col md:h-28">
-      <div class="flex flex-col gap-2 items-center mt-auto">
-        <button class="ml-auto bg-green-400 text-zinc-50 p-1 rounded-full hover:opacity-60" @click="store.moveToListened(album)">
+      <div class="flex flex-col justify-around">
+        <button v-if="inQueue" class="text-[1.3rem] text-center sm:text-2xl font-bold text-white bg-blue-500 shadow-md h-[30px] leading-3 z-40 grid place-content-center rounded opacity-85" @click="store.moveToListened(album)">
           <IconHeadphonesFilled />
         </button>
-
-        <div class="flex gap-2 md:flex-col">
-          <button class="size-[32px] bg-blue-400 text-zinc-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.QUEUE)">
-            <IconEdit />
-          </button>
-          <DeletePopover :type="ListType.QUEUE" :id="album.id" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div v-else class="flex items-center justify-between rounded p-1.5 pr-0.5 md:hover:bg-zinc-100/50 cursor-grab active:cursor-grabbing">
-    <div :class="[album.score === '10' ? 'ten-out-of-ten' : 'text-black', 'flex']">
-      <a v-if="album.cover" :href="album.spotifyUrl" rel="noreferrer nooppener">
-        <img v-if="album.cover" :src="album.cover" class="size-20 md:size-28 mr-3 rounded-sm" alt="album cover">
-      </a>
-      <div v-else class="size-20 md:size-28 mr-3 grid place-items-center rounded-sm bg-gray-200">
-        <IconMusic size="50" class="text-gray-300" />
-      </div>
-      <div class="flex flex-col justify-between">
-        <div class="flex flex-col gap-0.5 md:gap-1.5">
-          <h3 class="text-lg leading-4 max-w-[260px] truncate md:max-w-full md:text-2xl md:leading-5 font-bold grad-text">{{ album.title }}</h3>
-          <p :class="[album.score === '10' ? 'decoration-zinc-300' : '', 'font-medium text-[15px]s leading-4 md:text-lg md:md:leading-5 hover:underline cursor-pointer']" @click="emit('activeArtist', album.artist)">{{ album.artist }}</p>
-          <div class="text-sm md:text-base md:leading-3 leading-4">{{ album.year }}</div>
-        </div>
-        <button class="text-[1.3rem] md:text-2xl font-bold bg-red-500s pr-2 w-fit leading-5" @click="scoreDialogVisible = true">{{ album.score }}</button>
-      </div>
-    </div>
-
-    <div class="flex flex-col md:h-28">
-      <div class="flex flex-col gap-2 items-center mt-auto">
-        <button class="bg-blue-400 text-zinc-50 p-1 rounded-full hover:opacity-60" @click="openModal(ListType.LISTENED)">
-          <IconEdit />
+        <button v-else class="text-[1.3rem] text-center sm:text-2xl font-bold text-white h-[30px] shadow leading-3 grid place-content-center rounded opacity-85s" :style="getColor(album.score)" @click="scoreDialogVisible = true">
+          {{ album.score ?? '-' }}
         </button>
-        <DeletePopover :type="ListType.LISTENED" :id="album.id" />
       </div>
     </div>
   </div>
 
-  <AlbumDialog v-if="albumDialogVisible" @close="albumDialogVisible = false" :album :type />
-  <ScoreDialog v-if="scoreDialogVisible" @close="scoreDialogVisible = false" :score="album.score" :id="album.id" />
+  <ScoreDialog v-if="scoreDialogVisible" @close="scoreDialogVisible = false" :album />
 </template>
+
+<style>
+.swipe-left {
+  transform: translateX(-100px);
+  z-index: 999999 !important;
+}
+</style>

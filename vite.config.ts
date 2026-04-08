@@ -16,8 +16,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Music Heart',
-        short_name: 'Music Heart',
+        name: 'MusicHeart',
+        short_name: 'MusicHeart',
         description: 'Tracking and reviewing music albums',
         theme_color: '#ffffff',
         icons: [

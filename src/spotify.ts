@@ -22,3 +22,13 @@ export const fetchAlbums = async (query: string) => {
   const data = await response.json();
   return data.albums?.items;
 }
+
+export const getAlbumById = async (id: string) => {
+  const response = await fetch(`https://api.spotify.com/v1/albums/${id}`, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+  
+  return await response.json();
+}

@@ -5,7 +5,7 @@ import { IconDisc } from '@tabler/icons-vue'
 
 <template>
   <div class="relative">
-    <Stylus class="text-blue-600 absolute -top-0.5 left-[5px] z-50" />
-    <IconDisc size="50" class="animate-spin text-green-400" />
+    <Stylus class="text-rose-500 absolute -top-1 left-[13px] z-50" />
+    <IconDisc size="70" class="animate-spin text-blue-500" />
   </div>
 </template>

@@ -1,48 +1,73 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { TransitionRoot, TransitionChild, Dialog, DialogPanel } from '@headlessui/vue'
+import { onMounted, ref } from 'vue'
 import { useStore } from "@/store";
+import type { Album } from '@/types';
 
 const store = useStore()
 
 const emit = defineEmits(['close'])
 const props = defineProps<{
-  id: number
-  score: number
+  album: Album
 }>()
 
-const form = ref(props.score ?? 0)
+const score = ref(props.album.score ?? 0)
+const isVisible = ref(false)
 
-const submit = async () => {
-  await store.updateScore(props.id, form.value)
-  emit('close')
+const submit = async (s: string) => {
+  await store.updateScore(props.album.id, s)
+  close()
 }
+
+const close = () => {
+  isVisible.value = false
+  setTimeout(() => emit('close'), 300)
+}
+
+const getColor = (s: string) => {
+  let color = '#cccccc'
+  if (s !== '-') {
+    color = parseInt(s) > 4 ? parseInt(s) >= 8 ? 'oklch(79.2% 0.209 151.711)' : 'oklch(82.8% 0.189 84.429)' : 'oklch(64.5% 0.246 16.439)'
+  }
+
+  return { 
+    'background': s === score.value ? 'white' : color,
+    'color': s === score.value ? color : 'white',
+    'border-color': color,
+  }
+}
+
+onMounted(() => {
+  isVisible.value = true
+})
 </script>
 
 <template>
-  <TransitionRoot appear show as="template">
-    <Dialog as="div" @close="emit('close')" class="relative z-10">
-      <TransitionChild as="template" enter="duration-300 ease-out" enter-from="opacity-0" enter-to="opacity-100" leave="duration-200 ease-in" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-zinc-950/25" />
-      </TransitionChild>
-
-      <div class="fixed inset-0 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center">
-          <TransitionChild
-              as="template" enter="duration-300 ease-out" enter-from="opacity-0 scale-95" enter-to="opacity-100 scale-100" leave="duration-200 ease-in" leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-95">
-            <DialogPanel class="w-full max-w-md transform overflow-hidden rounded-2xl bg-zinc-50 p-6 text-left align-middle shadow-xl transition-all">
-              <div class="text-5xl text-center text-black mb-4">{{ form }}</div>
-              <input v-model="form" type="range" min="0" max="10" step=".5" value="0">
-
-              <div class="mt-4">
-                <button type="button" class="ml-auto block justify-center rounded-md border border-transparent bg-green-200 px-3 py-1 text-sm font-medium text-green-900 hover:bg-green-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" @click="submit">
-                  Save
-                </button>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
+  <div class="fixed inset-0 z-[9999] bg-white/80 flex flex-col justify-end transition-opacity duration-300" :class="isVisible ? 'opacity-100' : 'opacity-0'" @click.self="close">
+    <transition name="sheet" appear>
+      <div v-if="isVisible" class="pb-16 p-3 bg-white">
+        <h2 class="font-bold text-xl leading-5 mb-3">{{ album.title }}
+          <span class="font-normal text-lg">&bullet; {{ album.year }}</span>
+        </h2>
+        <div class="grid grid-cols-6 gap-1.5 w-full">
+          <button v-for="s in ['-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']" :key="s" :style="getColor(s)" class="flex items-center justify-center gap-0.5 shadow font-bold border-2 text-xl w-full md:w-fit px-2 py-2 rounded-md transition-all bg-pink-300" @click="submit(s)">
+            {{ s }}
+          </button>
         </div>
       </div>
-    </Dialog>
-  </TransitionRoot>
+    </transition>
+  </div>
 </template>
+
+<style scoped>
+.sheet-enter-active, .sheet-leave-active {
+  transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.sheet-enter-from, .sheet-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.sheet-enter-to, .sheet-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
+</style>
