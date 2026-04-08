@@ -42,10 +42,6 @@ export const useStore = defineStore('store', {
         const { queue, listened } = docSnap.data()
         this.queue = queue ?? []
         this.listened = listened ?? []
-
-
-        console.log(this.listened.map(a => `${a.artist} - ${a.title}: ${a.score}/10`));
-        console.log(this.queue.map(a => `${a.artist} - ${a.title}`));
       }
     },
 
