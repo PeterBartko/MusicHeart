@@ -56,7 +56,7 @@ watch([() => store.activeScore, () => store.activeYear], () => {
       </div>
     </div>
 
-    <div v-if="store.showFilter" class="pb-2 sm:flex sm:flex-row-reverse sm:justify-between sm:mt-2">
+    <div v-if="store.showFilter" class="text-lg pb-2 sm:flex sm:flex-row-reverse sm:justify-between sm:mt-2">
       <div class="flex items-center justify-between sm:justify-end mt-2 sm:mt-0 gap-1.5">
         <button v-for="years in ['2', '1', '0', '9', '8', '7', '6']" :key="years" :class="[store.activeYear === years ? 'border-blue-500 text-blue-500' : 'bg-blue-500 border-blue-500 text-white', 'flex items-center justify-center gap-0.5 font-bold w-full sm:w-fit px-2 py-0.5 rounded-md shadow border-2 hover:opacity-70 transition-all']" @click="setActiveYears(years)">
           {{ years }}0s

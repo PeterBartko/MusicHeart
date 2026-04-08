@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { IconTrash } from "@tabler/icons-vue";
-import { ListType, useStore } from "@/store";
+import { type ListType, useStore } from "@/store";
 
 const props = defineProps<{
   type: ListType

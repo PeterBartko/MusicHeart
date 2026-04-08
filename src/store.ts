@@ -5,10 +5,7 @@ import { db, storage } from '@/firebase';
 import { getCoverPath } from "@/utils";
 import type { Album } from "@/types.ts";
 
-export enum ListType {
-  QUEUE = 'queue',
-  LISTENED = 'listened'
-}
+export type ListType = 'queue' | 'listened'
 
 export const useStore = defineStore('store', {
   state: () => ({
@@ -18,6 +15,7 @@ export const useStore = defineStore('store', {
     activeScore: 0,
     search: '',
     showFilter: window.innerWidth > 768,
+    editSection: undefined as ListType | undefined
   }),
 
   actions: {
@@ -73,7 +71,7 @@ export const useStore = defineStore('store', {
 
     async moveToListened(album: Album) {
       this.listened.unshift(album)
-      await this.delete(ListType.QUEUE, album.id)
+      await this.delete('queue', album.id)
     },
   }
 })

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { IconHeadphonesFilled, IconMusic, IconTrash } from "@tabler/icons-vue";
-import { ListType, useStore } from "@/store.js";
+import { useStore, type ListType } from "@/store";
 import ScoreDialog from "@/components/ScoreDialog.vue";
 import { computed, ref, watch } from "vue";
-import type { Album } from "@/types.ts";
+import type { Album } from "@/types";
 import { useSwipe } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
 
 const emit = defineEmits(['activeArtist'])
 const props = defineProps<{
   album: Album,
-  inQueue?: boolean,
+  section: ListType,
 }>()
 
 const store = useStore()
@@ -28,10 +28,6 @@ const getColor = (score?: string) => {
 
   const s = Number(score)
   return { background: s > 4 ? s >= 8 ? 'oklch(79.2% 0.209 151.711)' : 'oklch(82.8% 0.189 84.429)' : 'oklch(64.5% 0.246 16.439)' }
-}
-
-const deleteAlbum = () => {
-  store.delete(props.inQueue ? ListType.QUEUE : ListType.LISTENED, props.album.id)
 }
 
 const swipeStyle = computed(() => {
@@ -77,7 +73,7 @@ watch(isSwiping, (swiping) => {
 
 <template>
   <div class="relative">
-    <div ref="delbtn" class="btn bg-rose-500 absolute right-0.5 inset-y-0.5 w-[80px] rounded-md -z-10 grid place-content-center" @click="deleteAlbum">
+    <div ref="delbtn" class="btn bg-rose-500 absolute right-0.5 inset-y-0.5 w-[80px] rounded-md -z-10 grid place-content-center" @click="store.delete(section, album.id)">
       <IconTrash class="text-white" size="26" stroke-width="2" />
     </div>
     
@@ -95,12 +91,15 @@ watch(isSwiping, (swiping) => {
         </div>
         <h5>{{ album.year }}</h5>
       </div>
-      <div class="flex flex-col justify-around">
-        <button v-if="inQueue" class="text-[1.3rem] text-center sm:text-2xl font-bold text-white bg-blue-500 shadow-md h-[30px] leading-3 z-40 grid place-content-center rounded opacity-85" @click="store.moveToListened(album)">
+      <div class="flex flex-col justify-center gap-3">
+        <button v-if="section === 'queue'" class="text-[1.3rem] text-center sm:text-2xl font-bold text-white bg-blue-500 shadow-md h-[30px] leading-3 z-40 grid place-content-center rounded opacity-85" @click="store.moveToListened(album)">
           <IconHeadphonesFilled />
         </button>
         <button v-else class="text-[1.3rem] text-center sm:text-2xl font-bold text-white h-[30px] shadow leading-3 grid place-content-center rounded opacity-85s" :style="getColor(album.score)" @click="scoreDialogVisible = true">
           {{ album.score ?? '-' }}
+        </button>
+        <button v-if="store.editSection === section" class="text-[1.3rem] text-center sm:text-2xl font-bold text-white bg-rose-500 shadow-md h-[30px] leading-3 z-40 grid place-content-center rounded opacity-85" @click="store.delete(section, album.id)">
+          <IconTrash />
         </button>
       </div>
     </div>
@@ -108,10 +107,3 @@ watch(isSwiping, (swiping) => {
 
   <ScoreDialog v-if="scoreDialogVisible" @close="scoreDialogVisible = false" :album />
 </template>
-
-<style>
-.swipe-left {
-  transform: translateX(-100px);
-  z-index: 999999 !important;
-}
-</style>

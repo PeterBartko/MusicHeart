@@ -20,6 +20,11 @@ input::-webkit-inner-spin-button {
   overflow: visible !important;
 }
 
+.swipe-left {
+  transform: translateX(-100px);
+  z-index: 999999 !important;
+}
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.3s ease;

@@ -40,7 +40,7 @@ onUnmounted(() => window.removeEventListener('keyup', shortcuts))
     </div>
   </div>
 
-  <main v-else :style="{ 'margin-top': store.showFilter ? (isMobile ? '118px' : '78px') : '32px' }">
+  <main v-else :style="{ 'margin-top': store.showFilter ? (isMobile ? '127px' : '83px') : '32px' }">
     <Navbar />
     <router-view />
   </main>

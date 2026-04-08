@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { IconDisc, IconMoodPuzzled, IconMusicPlus } from "@tabler/icons-vue";
+import { IconDisc, IconEdit, IconMoodPuzzled, IconMusicPlus } from "@tabler/icons-vue";
 import { Container, Draggable } from 'vue-dndrop'
 import AlbumItem from "@/components/AlbumItem.vue";
-import { computed, ref } from "vue";
+import { computed, onUnmounted, ref } from "vue";
 import type { Album } from "@/types.ts";
 import { applyDrag } from "@/utils.ts";
 import { useStore } from "@/store.ts";
@@ -67,18 +67,28 @@ const listened = computed(() => store.listened.filter((album: Album) => {
 
   return matchesSearch
 }))
+
+onUnmounted(() => {
+  store.showFilter = false
+})
 </script>
 
 <template>
   <div v-if="!store.activeScore">
-    <header :style="{ 'top': store.showFilter ? (isMobile ? '118px' : '78px') : '32px' }" class="flex items-center gap-2 text-black pb-1 sticky !inset-x-0 bg-white z-[999] px-2 shadow-md">
+    <header :style="{ 'top': store.showFilter ? (isMobile ? '127px' : '83px') : '32px' }" class="group flex items-center gap-2 text-black pb-1.5 sticky !inset-x-0 bg-white z-[999] px-2 shadow-md">
       <h2 class="text-2xl font-semibold">Up Next</h2>
       &bullet;
-      <div class="flex items-center font-medium gap-0.5 mt-0.5">
+      <div class="flex items-center text-lg font-medium gap-0.5 mt-0.5 -ml-0.5">
         <IconDisc size="20" class="spin" />
         <span>{{ queue.length }}</span>
       </div>
-      <button class="ml-auto bg-violet-500 text-white pb-0.5 active:opacity-55 font-bold px-2 rounded shadow" @click="pickRandomAlbum">Surprise Me</button>
+
+      <div class="ml-auto flex gap-1.5">
+        <button v-if="!isMobile" class="hidden group-hover:grid text-[1.3rem] text-center sm:text-2xl font-bold text-white bg-indigo-500 shadow-md size-[30px] leading-3 z-40 place-content-center rounded opacity-85" @click="store.editSection = store.editSection ? undefined : 'queue'">
+          <IconEdit />
+        </button>
+        <button class="bg-violet-500 text-white text-lg h-[30px] active:opacity-55 font-bold px-2 rounded shadow" @click="pickRandomAlbum">Surprise Me</button>
+      </div>
     </header>
     <Container @drop="onQueueDrop" tag="ul" class="space-y-2.5 p-2.5 pt-3">
       <div v-if="!queue.length" class="text-black/40 h-16 w-full grid place-content-center">
@@ -88,19 +98,22 @@ const listened = computed(() => store.listened.filter((album: Album) => {
         </div>
       </div>
       <Draggable tag="li" v-for="album in queue" :key="album?.id" :drag-not-allowed="isMobile">
-        <AlbumItem :album in-queue @active-artist="artist => store.search = artist" />
+        <AlbumItem :album section="queue" @active-artist="artist => store.search = artist" />
       </Draggable>
     </Container>
   </div>
 
   
-  <header :style="{ 'top': store.showFilter ? (isMobile ? '118px' : '78px') : '32px' }" class="flex items-center gap-2 text-black pb-1 sticky top-8 sm:top-11 bg-white z-[999] px-2 shadow-md">
+  <header :style="{ 'top': store.showFilter ? (isMobile ? '127px' : '83px') : '32px' }" class="group flex items-center gap-2 text-black pb-1.5 sticky top-8 sm:top-11 bg-white z-[999] px-2 shadow-md">
     <h2 class="text-2xl font-semibold">Listened</h2>
     &bullet;
-    <div class="flex items-center font-medium gap-0.5 mt-0.5">
+    <div class="flex items-center text-lg font-medium gap-0.5 mt-0.5 -ml-0.5">
       <IconDisc size="20" class="spin" />
       <span>{{ listened.length }}</span>
     </div>
+    <button v-if="!isMobile" class="hidden group-hover:grid ml-auto mr-0.5 text-[1.3rem] text-center sm:text-2xl font-bold text-white bg-indigo-500 shadow-md size-[30px] leading-3 z-40 place-content-center rounded opacity-85" @click="store.editSection = store.editSection ? undefined : 'listened'">
+      <IconEdit />
+    </button>
   </header>
   
   <Container @drop="onListenedDrop" tag="ul" class="space-y-2.5 p-2.5 pt-3">
@@ -111,7 +124,7 @@ const listened = computed(() => store.listened.filter((album: Album) => {
       </div>
     </div>      
     <Draggable tag="li" v-for="album in listened" :key="album?.id" :drag-not-allowed="isMobile">
-      <AlbumItem :album @active-artist="artist => store.search = artist" />
+      <AlbumItem :album section="listened" @active-artist="artist => store.search = artist" />
     </Draggable>
   </Container>
     
