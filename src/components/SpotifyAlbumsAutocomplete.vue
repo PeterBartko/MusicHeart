@@ -37,6 +37,7 @@ const fetchSpotifyAlbums = async (query: string) => {
 
 const handleAlbumSelect = (album: SpotifyAlbum) => {
   emit('getAlbumData', {
+    id: album.id,
     cover: album.images[1].url,
     title: album.name,
     artist: album.artists[0].name,
